@@ -1,0 +1,14 @@
+- hosts: web
+  become: yes
+  tasks:
+    - name: Load image
+      command: podman load -i /tmp/myapp.tar
+
+    - name: Stop old container
+      command: podman stop myapp || true
+
+    - name: Remove old container
+      command: podman rm myapp || true
+
+    - name: Run container
+      command: podman run -d -p 8081:80 --name myapp myapp:latest
