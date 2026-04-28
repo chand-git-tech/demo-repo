@@ -12,6 +12,7 @@ pipeline {
 
         stage('Save Image') {
             steps {
+                sh 'rm -f myapp.tar'
                 sh 'podman save -o myapp.tar myapp:latest'
             }
         }
