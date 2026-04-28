@@ -1,5 +1,4 @@
 - hosts: web
-  become: yes
   tasks:
     - name: Load image
       command: podman load -i /tmp/myapp.tar
