@@ -31,7 +31,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'curl http://<10.89.27.71>:8081'
+                sh 'curl http://10.89.27.71:8081'
             }
         }
     }
