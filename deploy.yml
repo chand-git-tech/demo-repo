@@ -1,15 +1,15 @@
 - hosts: web
   tasks:
     - name: Load image
-      command: podman load -i /tmp/myapp.tar
+      command: docker load /tmp/mynginx.tar.gz
 
     - name: Stop old container
-      command: podman stop myapp
+      command: docker stop myapp
       ignore_errors: yes
 
     - name: Remove old container
-      command: podman rm myapp
+      command: docker rm myapp
       ignore_errors: yes
 
     - name: Run container
-      command: podman run -d -p 8081:80 --name myapp myapp:latest
+      command: docker run -d -p 80:80 --name myapp mynginx
