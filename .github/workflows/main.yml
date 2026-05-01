@@ -24,16 +24,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 13.60.33.63 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 13.51.158.88 >> ~/.ssh/known_hosts
 
       - name: Copy image to server
-        run: scp mynginx.tar.gz ec2-user@13.60.33.63:/tmp/
+        run: scp mynginx.tar.gz ec2-user@13.51.158.88:/tmp/
 
-      - name: Load and run container
-        run: |
-          ssh ec2-user@13.60.33.63 << 'EOF'
-            docker load < /tmp/mynginx.tar.gz
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d -p 80:80 --name myapp mynginx
-          EOF
+      - name: Load and Run container
+        run: ansible-playbook -i inventory deploy.yml
+        
