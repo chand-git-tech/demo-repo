@@ -9,8 +9,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
-      - name: Test connectivity
-        run: ping -c 3 13.60.33.63
 
+    - name: Setup SSH
+      run: |
+       mkdir -p ~/.ssh
+       echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+       chmod 600 ~/.ssh/id_rsa
+
+    - name: Test SSH
+      run: |
+       ssh -o StrictHostKeyChecking=no ec2-user@13.60.33.63 "echo CONNECTED"
     
