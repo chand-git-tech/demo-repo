@@ -1,11 +1,19 @@
-name: test-run
+name: build-deploy
 
 on:
   push:
   workflow_dispatch:
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "Hello from GitHub Actions"
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Build Docker
+        run: docker build -t myapp .
+
+      - name: Run container
+        run: docker run -d -p 80:80 myapp
