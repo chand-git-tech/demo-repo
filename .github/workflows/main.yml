@@ -9,20 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Podman
-        run: sudo apt update && sudo apt install podman -y
-
-      - name: Build Docker image
-        run: podman build -t mynginx .
-
-      - name: Save image
-        run: podman save mynginx | gzip > mynginx.tar.gz
-  
-
+    
       - name: Test connectivity
-        run: ping -c 3 10.89.27.36
+        run: ping -c 3 13.60.33.63
 
     
