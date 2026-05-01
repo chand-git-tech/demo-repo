@@ -1,7 +1,7 @@
 name: deploy-custom-nginx
 
 on:
-  push:
+#  push:
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
         run: docker build -t mynginx .
 
       - name: Save image
-        run: docker save mynginx | gzip > mynginx.tar.gz
+        run: docker save -o mynginx.tar mynginx
 
       - name: Setup SSH
         run: |
@@ -27,7 +27,7 @@ jobs:
           ssh-keyscan -H 13.51.158.88 >> ~/.ssh/known_hosts
 
       - name: Copy image to server
-        run: scp mynginx.tar.gz ec2-user@13.51.158.88:/tmp/
+        run: scp mynginx.tar ec2-user@13.51.158.88:/tmp/
 
       - name: Load and Run container
         run: ansible-playbook -i inventory deploy.yml
