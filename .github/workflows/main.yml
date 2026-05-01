@@ -20,25 +20,9 @@ jobs:
 
       - name: Save image
         run: podman save mynginx | gzip > mynginx.tar.gz
+  
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.LOCAL_NODE1 }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 10.89.27.36 >> ~/.ssh/known_hosts
+      - name: Test connectivity
+        run: ping -c 3 10.89.27.36
 
-          - name: Test connectivity
-            run: ping -c 3 10.89.27.36
-
-      - name: Copy image to server
-        run: scp mynginx.tar.gz chand@10.89.27.36:/tmp/
-
-      - name: Load and run container
-        run: |
-          ssh chand@10.89.27.36 << 'EOF'
-            podman load < /tmp/mynginx.tar.gz
-            podman stop mynginx || true
-            podman rm mynginx || true
-            podman run -d -p 8081:80 --name myapp mynginx
-          EOF
+    
