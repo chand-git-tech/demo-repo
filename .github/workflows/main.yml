@@ -1,4 +1,4 @@
-name: build-deploy
+name: deploy-custom-nginx
 
 on:
   push:
@@ -9,11 +9,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Build Docker
-        run: docker build -t myapp .
+      - name: Install Podman
+        run: sudo apt update && sudo apt install podman -y
 
-      - name: Run container
-        run: docker run -d -p 80:80 myapp
+      - name: Build Docker image
+        run: podman build -t mynginx .
+
+      - name: Save image
+        run: podman save mynginx | gzip > mynginx.tar.gz
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 10.89.27.36 >> ~/.ssh/known_hosts
+
+      - name: Copy image to server
+        run: scp mynginx.tar.gz chand@10.89.27.36:/tmp/
+
+      - name: Load and run container
+        run: |
+          ssh chand@10.89.27.36 << 'EOF'
+            podman load < /tmp/mynginx.tar.gz
+            podman stop mynginx || true
+            podman rm mynginx || true
+            podman run -d -p 8081:80 --name myapp mynginx
+          EOF
