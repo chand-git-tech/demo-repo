@@ -1,7 +1,7 @@
 - hosts: web
   tasks:
     - name: Load image
-      command: gunzip -c /tmp/mynginx.tar.gz | docker load
+      command: docker load -i /tmp/mynginx.tar
 
     - name: Stop old container
       command: docker stop myapp
