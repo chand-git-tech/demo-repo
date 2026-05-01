@@ -35,5 +35,5 @@ jobs:
             docker load < /tmp/mynginx.tar.gz
             docker stop myapp || true
             docker rm myapp || true
-            docker run -d -p 8081:80 --name myapp mynginx
+            docker run -d -p 80:80 --name myapp mynginx
           EOF
