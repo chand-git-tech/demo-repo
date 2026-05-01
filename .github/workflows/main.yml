@@ -28,6 +28,9 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 10.89.27.36 >> ~/.ssh/known_hosts
 
+          - name: Test connectivity
+            run: ping -c 3 10.89.27.36
+
       - name: Copy image to server
         run: scp mynginx.tar.gz chand@10.89.27.36:/tmp/
 
